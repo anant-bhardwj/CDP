@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 export const signup = async (req, res) => {
   try {
+    console.log("Received data:", req.body);
     const { username, email, password, confirmPassword } = req.body;
 
     //Check if username already exists

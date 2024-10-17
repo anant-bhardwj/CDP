@@ -1,32 +1,24 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
-import axios from "axios";
 import toast from "react-hot-toast";
+import axios from "axios";
 
-const useSignup = () => {
+const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const { setAuthUser } = useAuthContext();
 
-  const signup = async ({ username, email, password, confirmPassword }) => {
-    const success = handleInputErrors({
-      username,
-      email,
-      password,
-      confirmPassword,
-    });
+  const login = async (username, password) => {
+    const success = handleInputErrors(username, password);
 
     if (!success) return;
 
     setLoading(true);
-
     axios
       .post(
-        "/api/auth/signup",
+        "/api/auth/login",
         {
           username,
-          email,
           password,
-          confirmPassword,
         },
         {
           headers: { "Content-Type": "application/json" },
@@ -46,7 +38,7 @@ const useSignup = () => {
         if (error.response) {
           console.error("Error status:", error.response.status); // Status code
           console.error("Error response data:", error.response.data); // Full error data
-          toast.error(error.response.data.error || "Signup failed");
+          toast.error(error.response.data.error || "Login failed");
         } else {
           console.error("Error:", error.message);
           toast.error("An unexpected error occurred");
@@ -56,26 +48,16 @@ const useSignup = () => {
         setLoading(false);
       });
   };
-  return { loading, signup };
+
+  return { loading, login };
 };
 
-export default useSignup;
+export default useLogin;
 
-function handleInputErrors({ username, email, password, confirmPassword }) {
-  if (!username || !email || !password || !confirmPassword) {
+function handleInputErrors(username, password) {
+  if (!username || !password) {
     toast.error("Please fill all the fields");
     return false;
   }
-
-  if (password !== confirmPassword) {
-    toast.error("Passwords do NOT match");
-    return false;
-  }
-
-  if (password.length < 5) {
-    toast.error("Password must be 5 characters or more");
-    return false;
-  }
-
   return true;
 }
