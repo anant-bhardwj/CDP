@@ -41,29 +41,20 @@ const startServer = async () => {
   }
 };
 
-app.get("/test-bigquery", async (req, res) => {
+const connectToBigquery = async () => {
   try {
-    // Test the connection by listing datasets in the BigQuery project
     const [datasets] = await bigquery.getDatasets();
 
-    // If the connection is successful, send the dataset list or confirmation message
     if (datasets.length > 0) {
-      console.log("Connected to bigquery");
-      res
-        .status(200)
-        .json({
-          message: `Connected to BigQuery. Found ${datasets.length} datasets.`,
-        });
+      console.log(`Connected to BigQuery. Found ${datasets.length} datasets`);
     } else {
-      console.log("Connected to bigquery");
-      res
-        .status(200)
-        .json({ message: "Connected to BigQuery. No datasets found." });
+      console.log(`Connected to BigQuery. Found no datasets`);
     }
   } catch (error) {
-    console.error("Error connecting to BigQuery:", error);
-    res.status(500).json({ message: "Error connecting to BigQuery", error });
+    console.log(`Error connecting to BigQuery: `, error);
+    throw new Error("Error connecting to BigQuery");
   }
-});
+};
 
 startServer();
+connectToBigquery();
