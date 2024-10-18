@@ -1,3 +1,5 @@
 node_modules
 # Keep environment variables out of version control
 .env
+
+cdp1-439017-b441da520659.json
