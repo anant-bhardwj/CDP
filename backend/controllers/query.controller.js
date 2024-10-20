@@ -1,11 +1,8 @@
 import getBigQuery from "../connectToBigquery.js";
 import path from "path";
 import fs from "fs";
-import pkg from "papaparse";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-
-const { parse } = pkg;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -112,8 +109,90 @@ export const uploadCSV = async (req, res) => {
   }
 };
 
+//fetching dataset info and name of tables in each dataset
+//only needs userId that it gets into the req from protectRoute
+export const datasetInfo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const datasetId = `user_${userId}_dataset`;
+
+    const bigquery = getBigQuery();
+
+    const [datasetExists] = await bigquery.dataset(datasetId).exists();
+    if (!datasetExists) {
+      console.log("Error in getting dataset info. Dataset does not exist");
+      return res.status(400).json({ error: "Dataset not found" });
+    }
+
+    const [tables] = await bigquery.dataset(datasetId).getTables();
+
+    if (!tables || tables.length === 0) {
+      console.log("No tables in selected dataset");
+      return res
+        .status(400)
+        .json({ message: "No tables found in the dataset" });
+    }
+
+    const tableNames = tables.map((table) => table.id);
+
+    console.log(`Found ${tables.length} tables in Dataset`, tableNames);
+
+    return res.status(200).json({
+      message: `Found ${tables.length} tables in Dataset`,
+      tables: tableNames,
+    });
+  } catch (error) {
+    console.log("Error fetching dataset info: ", error);
+    return res
+      .status(500)
+      .json({ error: "Internal server error fetching dataset info" });
+  }
+};
+
 //running a query
 //gives response of query, bunch of data to be displayed
+export const runQuery = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const datasetId = `user_${userId}_dataset`;
+    const { tableName, query } = req.body;
+
+    if (!tableName || !query) {
+      console.log("Table ID and query needed");
+      return res.status(400).json({ error: "Table ID and query needed" });
+    }
+
+    const bigquery = getBigQuery();
+
+    const [tableExists] = await bigquery
+      .dataset(datasetId)
+      .table(tableName)
+      .exists();
+
+    if (!tableExists) {
+      return res
+        .status(400)
+        .json({ error: `Table ${tableName} does not exist` });
+    }
+
+    const options = {
+      query: query,
+      location: "US",
+    };
+
+    const [job] = await bigquery.createQueryJob(options);
+    console.log(`Query job started.`);
+
+    const [rows] = await job.getQueryResults();
+    console.log("Query results generated: ", rows);
+
+    return res.status(200).json({ message: "Query successful", data: rows });
+  } catch (error) {
+    console.error("Error running the query: ", error);
+    return res.status(500).json({ error: "Error running query" });
+  }
+};
 
 //fetching the metadata of a table
 //including the schema, column names, number of rows etc.
