@@ -59,7 +59,9 @@ export const login = async (req, res) => {
 
     console.log("Login successful");
 
-    res.status(200).json({ message: "Login successful" });
+    res
+      .status(200)
+      .json({ message: "Login successful", username: user.username });
   } catch (error) {
     console.log("Error in login controller", error.message);
     res.status(500).send({ message: error.message });

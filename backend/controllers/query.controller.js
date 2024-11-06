@@ -11,6 +11,7 @@ const __dirname = dirname(__filename);
 //used when new user signup, automatically creates a dataset for them
 //havent added into the signup controller yet. as of now no automatic creation on signup
 //consider adding a create dataset button on frontend if no dataset exists
+//request needs the id
 export const createDataset = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -40,7 +41,7 @@ export const createDataset = async (req, res) => {
 
 //uploading csv data
 //creates the table in the users personal dataset
-
+//request needs id, file to be uploaded, tableName
 export const uploadCSV = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -151,6 +152,11 @@ export const datasetInfo = async (req, res) => {
 
 //running a query
 //gives response of query, bunch of data to be displayed
+//request needs the id, query, tablename
+
+//IMPORTANT: the query needs to be in the format that the tablename is like dataset.tablename
+// like this `SELECT * FROM \`${datasetId}.${tableName}\` LIMIT 50`
+//do this on thr frontend only
 export const runQuery = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -194,8 +200,63 @@ export const runQuery = async (req, res) => {
   }
 };
 
-//fetching the metadata of a table
+//fetching the metadata of an individual table
 //including the schema, column names, number of rows etc.
+// request should have the id, tableName sent to it
+export const getTableInfo = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const datasetId = `user_${userId}_dataset`;
+
+    const { tableName } = req.body;
+
+    if (!tableName) {
+      console.log("Table name is required");
+      return res.status(400).json({ error: "Table name is required" });
+    }
+
+    const bigquery = getBigQuery();
+
+    const [tableExists] = await bigquery
+      .dataset(datasetId)
+      .table(tableName)
+      .exists();
+
+    if (!tableExists) {
+      return res.status(400).json({ error: `Table does not exist` });
+    }
+
+    //schema fetching
+    const [table] = await bigquery
+      .dataset(datasetId)
+      .table(tableName)
+      .getMetadata();
+    const schema = table.schema.fields.map((field) => ({
+      name: field.name,
+      type: field.type,
+      mode: field.mode,
+    }));
+
+    //query to get the first 50 rows of data
+    const query = `SELECT * FROM \`${datasetId}.${tableName}\` LIMIT 50`;
+    const options = { query: query, location: "US" };
+
+    const [job] = await bigquery.createQueryJob(options);
+    console.log("Query job started for table rows");
+
+    const [rows] = await job.getQueryResults();
+    console.log("Query results generated: ", rows);
+
+    return res.status(200).json({
+      message: "Table info fetched successfully",
+      schema: schema,
+      rows: rows,
+    });
+  } catch (error) {
+    console.error("Error fetching table info: ", error);
+    return res.status(500).json({ error: "Error fetching table info" });
+  }
+};
 
 //deleting a table from the dataset
 

@@ -9,7 +9,7 @@ import { useAuthContext } from "./context/AuthContext.jsx";
 function App() {
   const { authUser } = useAuthContext();
   return (
-    <div className="p-4 h-screen flex items-center justify-center">
+    <div className="min-h-screen flex flex-1 flex-col w-full">
       <Routes>
         <Route
           path="/"

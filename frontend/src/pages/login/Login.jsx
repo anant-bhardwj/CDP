@@ -14,59 +14,61 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
-      <div className="w-full p-6 rounded-lg shadow-md bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-10">
-        <h1 className="text-3xl font-semibold text-center text-gray-300">
-          Login
-          <span> CDP</span>
-        </h1>
+    <div className="p-4 h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
+        <div className="w-full p-6 rounded-lg shadow-md bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-10">
+          <h1 className="text-3xl font-semibold text-center text-gray-300">
+            Login
+            <span> CDP</span>
+          </h1>
 
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
-          <div>
-            <label className="label p-2">
-              <span className="text-base label-text">Username</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Enter Username"
-              className="w-full input input-bordered h-10"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+            <div>
+              <label className="label p-2">
+                <span className="text-base label-text">Username</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter Username"
+                className="w-full input input-bordered h-10"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
 
-          <div>
-            <label className="label">
-              <span className="text-base label-text">Password</span>
-            </label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              className="w-full input input-bordered h-10"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <Link
-            to="/signup"
-            className="text-sm hover:underline hover: hover:text-blue-300 mt-2 inline-block"
-          >
-            {"Don't"} have an account?
-          </Link>
-
-          <div>
-            <button
-              className="btn btn-block btn-sm mt-2 border border-slate-700"
-              disabled={loading}
+            <div>
+              <label className="label">
+                <span className="text-base label-text">Password</span>
+              </label>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                className="w-full input input-bordered h-10"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Link
+              to="/signup"
+              className="text-sm hover:underline hover: hover:text-blue-300 mt-2 inline-block"
             >
-              {loading ? (
-                <span className="loading loading-spinner"></span>
-              ) : (
-                "Login"
-              )}
-            </button>
-          </div>
-        </form>
+              {"Don't"} have an account?
+            </Link>
+
+            <div>
+              <button
+                className="btn btn-block btn-sm mt-2 border border-slate-700"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Login"
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -1,12 +1,16 @@
 import React from "react";
-import useLogout from "../../hooks/useLogout";
+import Navbar from "../../components/Navbar.jsx";
+import Sidebar from "../../components/sidebar.jsx";
+import Body from "../../components/body/Body.jsx";
 
 const Home = () => {
-  const { loading, logout } = useLogout();
-
   return (
-    <div>
-      <button onClick={logout}>LOGOUT</button>
+    <div className="h-screen flex flex-col bg-base-300">
+      <Navbar />
+      <div className="flex flex-1">
+        <Sidebar />
+        <Body />
+      </div>
     </div>
   );
 };

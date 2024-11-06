@@ -5,6 +5,7 @@ import { upload } from "../middleware/uploadRoute.js";
 import {
   createDataset,
   datasetInfo,
+  getTableInfo,
   runQuery,
   uploadCSV,
 } from "../controllers/query.controller.js";
@@ -28,6 +29,9 @@ router.post("/upload-table", protectRoute, upload.single("csvFile"), uploadCSV);
 
 //to get list of tablenames in a dataset
 router.get("/dataset-info", protectRoute, datasetInfo);
+
+//to get schema and preview of individual table
+router.get("/table-info", protectRoute, getTableInfo);
 
 //to run a  query
 router.post("/run-query", protectRoute, runQuery);
