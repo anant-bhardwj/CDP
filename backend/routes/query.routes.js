@@ -31,7 +31,7 @@ router.post("/upload-table", protectRoute, upload.single("csvFile"), uploadCSV);
 router.get("/dataset-info", protectRoute, datasetInfo);
 
 //to get schema and preview of individual table
-router.get("/table-info", protectRoute, getTableInfo);
+router.post("/table-info", protectRoute, getTableInfo);
 
 //to run a  query
 router.post("/run-query", protectRoute, runQuery);
