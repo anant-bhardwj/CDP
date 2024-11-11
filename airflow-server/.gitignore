@@ -1,0 +1,5 @@
+dags/data
+logs
+plugins
+dags/__pycache__
+.env
