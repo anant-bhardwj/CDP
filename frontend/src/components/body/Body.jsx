@@ -1,7 +1,17 @@
 import React, { useState } from "react";
+import useGetQueryResult from "../../hooks/useGetQueryResult";
 
 const Body = ({ selectedTable, tableData, loading }) => {
   const [activeTab, setActiveTab] = useState("schema");
+  const [query, setQuery] = useState("");
+
+  const { queryLoading, queryResult, queryError, executeQuery } =
+    useGetQueryResult();
+
+  const handleQueryExecute = () => {
+    executeQuery(query, selectedTable);
+  };
+  console.log("render2");
 
   if (!selectedTable) {
     return (
@@ -108,7 +118,58 @@ const Body = ({ selectedTable, tableData, loading }) => {
         ) : (
           <div>
             <h3 className="text-lg font-bold mb-4">Run a Query</h3>
-            {/* Add querying UI here */}
+            <textarea
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="textarea textarea-bordered w-full mb-4"
+              rows="4"
+              placeholder="Write your SQL query here..."
+            ></textarea>
+            <button
+              onClick={handleQueryExecute}
+              className="btn btn-primary mb-4"
+              disabled={queryLoading}
+            >
+              {queryLoading ? "Executing..." : "Run Query"}
+            </button>
+            {queryError && <p className="text-red-500 mb-4">{queryError}</p>}
+            {queryResult && (
+              <div>
+                <h4 className="text-lg font-bold mb-2">Query Results</h4>
+                {queryResult.length > 0 ? (
+                  <table className="table-auto w-full border-collapse border border-gray-300">
+                    <thead>
+                      <tr>
+                        {Object.keys(queryResult[0]).map((key) => (
+                          <th
+                            key={key}
+                            className="border border-gray-300 px-4 py-2"
+                          >
+                            {key}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {queryResult.map((row, index) => (
+                        <tr key={index}>
+                          {Object.values(row).map((value, idx) => (
+                            <td
+                              key={idx}
+                              className="border border-gray-300 px-4 py-2"
+                            >
+                              {value}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p>No results found.</p>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

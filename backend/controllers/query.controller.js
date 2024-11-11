@@ -162,7 +162,9 @@ export const runQuery = async (req, res) => {
     const userId = req.user.id;
 
     const datasetId = `user_${userId}_dataset`;
-    const { tableName, query } = req.body;
+    // const { tableName, query } = req.body;
+    const query = req.body.query;
+    const tableName = req.body.selectedTable;
 
     if (!tableName || !query) {
       console.log("Table ID and query needed");
