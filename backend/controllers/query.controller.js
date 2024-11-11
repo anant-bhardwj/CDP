@@ -121,8 +121,8 @@ export const datasetInfo = async (req, res) => {
 
     const [datasetExists] = await bigquery.dataset(datasetId).exists();
     if (!datasetExists) {
-      console.log("Error in getting dataset info. Dataset does not exist");
-      return res.status(400).json({ error: "Dataset not found" });
+      console.log("Dataset does not exist");
+      return res.status(400).json({ error: "Dataset does not exist" });
     }
 
     const [tables] = await bigquery.dataset(datasetId).getTables();

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 import generateToken from "../utils/generateToken.js";
+import { createDatasetForUser } from "../utils/createDatasetForUser.js";
 
 const prisma = new PrismaClient();
 
@@ -37,9 +38,15 @@ export const signup = async (req, res) => {
       generateToken(user.id, res);
     }
 
+    const datasetResult = await createDatasetForUser(user.id);
+
+    if (!datasetResult.success) {
+      return res.status(400).json({ message: datasetResult.message });
+    }
+
     //done. user created
-    console.log("User created");
-    res.status(201).json({ message: "User created", user });
+    console.log("User created and dataset created");
+    res.status(201).json({ message: "User created", username: user.username });
   } catch (error) {
     console.log("Error in signup controller", error.message);
     res.status(500).send({ message: error.message });

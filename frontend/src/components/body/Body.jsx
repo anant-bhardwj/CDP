@@ -11,7 +11,6 @@ const Body = ({ selectedTable, tableData, loading }) => {
   const handleQueryExecute = () => {
     executeQuery(query, selectedTable);
   };
-  console.log("render2");
 
   if (!selectedTable) {
     return (
@@ -136,11 +135,11 @@ const Body = ({ selectedTable, tableData, loading }) => {
             {queryResult && (
               <div>
                 <h4 className="text-lg font-bold mb-2">Query Results</h4>
-                {queryResult.length > 0 ? (
+                {queryResult.data.length > 0 ? (
                   <table className="table-auto w-full border-collapse border border-gray-300">
                     <thead>
                       <tr>
-                        {Object.keys(queryResult[0]).map((key) => (
+                        {Object.keys(queryResult.data[0]).map((key) => (
                           <th
                             key={key}
                             className="border border-gray-300 px-4 py-2"
@@ -151,7 +150,7 @@ const Body = ({ selectedTable, tableData, loading }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {queryResult.map((row, index) => (
+                      {queryResult.data.map((row, index) => (
                         <tr key={index}>
                           {Object.values(row).map((value, idx) => (
                             <td

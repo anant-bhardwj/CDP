@@ -13,9 +13,9 @@ const useGetQueryResult = () => {
       return;
     }
 
-    setQueryError(null);
+    // setQueryError(null);
     setQueryLoading(true);
-    setQueryResult(null); // Reset previous results
+    // setQueryResult(null); // Reset previous results
 
     try {
       const response = await axios.post(
@@ -23,9 +23,12 @@ const useGetQueryResult = () => {
         { query, selectedTable },
         { headers: { "Content-Type": "application/json" } }
       );
+      response.data.status = true;
       setQueryResult(response.data);
+      setQueryError(null);
     } catch (error) {
       console.error("Query execution error:", error);
+      setQueryResult(null);
       if (error.response) {
         setQueryError(error.response.data.error || "Failed to execute query.");
         toast.error(error.response.data.error || "Failed to execute query.");

@@ -3,8 +3,8 @@ import protectRoute from "../middleware/protectRoute.js";
 import { upload } from "../middleware/uploadRoute.js";
 //import controllers here
 import {
-  createDataset,
   datasetInfo,
+  createDataset,
   getTableInfo,
   runQuery,
   uploadCSV,
@@ -13,6 +13,8 @@ import {
 const router = express.Router();
 
 //create-dataset api call expects only the user id in req
+// created a separate util file for automatic creation of dataset
+// this route can still be used to manually create dataset for users without dataset using postman
 router.post("/create-dataset", protectRoute, createDataset);
 
 //uploadCSV controller expects user id from protected routes, file to be uploaded,
