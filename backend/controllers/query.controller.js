@@ -247,7 +247,8 @@ export const getTableInfo = async (req, res) => {
     console.log("Query job started for table rows");
 
     const [rows] = await job.getQueryResults();
-    console.log("Query results generated: ", rows);
+    // console.log("Query results generated: ", rows);
+    console.log("Query results generated");
 
     return res.status(200).json({
       message: "Table info fetched successfully",
