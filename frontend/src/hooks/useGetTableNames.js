@@ -20,7 +20,7 @@ const useGetTableNames = () => {
         setTables(response.data.tables);
       } else {
         console.log("No tables found");
-        toast.error("No tables found");
+        toast.custom("No tables found");
       }
     } catch (error) {
       console.error("Error in fetching tables: ", error);

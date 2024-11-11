@@ -15,16 +15,9 @@ const useSubmitTable = () => {
     formData.append("csvFile", file);
 
     setLoading(true);
-    axios
+    const response = await axios
       .post("api/query/upload-table", formData, {
         headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then(function (response) {
-        const data = response;
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
       })
       .catch(function (error) {
         if (error.response) {
@@ -39,6 +32,11 @@ const useSubmitTable = () => {
       .finally(function () {
         setLoading(false);
       });
+    if (response.error) {
+      return false;
+    } else {
+      return response;
+    }
   };
   return { loading, submitTable };
 };

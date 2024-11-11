@@ -130,7 +130,7 @@ export const datasetInfo = async (req, res) => {
     if (!tables || tables.length === 0) {
       console.log("No tables in selected dataset");
       return res
-        .status(400)
+        .status(200)
         .json({ message: "No tables found in the dataset" });
     }
 
