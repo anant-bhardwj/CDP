@@ -7,7 +7,6 @@ const useGetTableNames = () => {
   const [loading, setLoading] = useState(false);
 
   const getTableNames = useCallback(async () => {
-    console.log("Fetching table names in the hook");
     setLoading(true);
     try {
       const response = await axios.get("api/query/dataset-info", {
