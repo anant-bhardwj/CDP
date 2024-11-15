@@ -22,7 +22,7 @@ dag = DAG(
 )
 
 def extract_data(**kwargs):
-    df = pd.read_csv('/opt/airflow/dags/data/bquxjob_3b57dea0_192a6909532.csv')
+    df = pd.read_csv('/opt/airflow/dags/data/bquxjob_3b57dea0_192a6909532.csv') #name of table to read
     return df.to_json()
 
 def clean_data(**kwargs):
@@ -55,6 +55,7 @@ def clean_data(**kwargs):
     df.fillna('', inplace=True)
     df.drop_duplicates(inplace=True)
 
+    #what name to give to the cleaned table
     cleaned_data_path = '/opt/airflow/dags/data/cleaned_data_1.csv'
     df.to_csv(cleaned_data_path, index=False)
     
@@ -74,7 +75,8 @@ def load_to_bigquery(**kwargs):
         project=credentials.project_id
     )
 
-    table_id = "cdp1-439017.user_1_dataset.airflow_table_1"
+    #name of the table to be saved
+    table_id = "cdp1-439017.user_1_dataset.djs_airflow_table_1"
 
     job_config = bigquery.LoadJobConfig(
         autodetect=True,
